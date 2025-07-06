@@ -1,0 +1,34 @@
+services:
+  # Product Details Backend (Python)
+  product-details:
+    build:
+      context: ./backend_services/products_list
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000" # Host_Port:Container_Port (within PWD's host)
+    environment:
+      - PORT=5000
+    restart: always
+
+  # Dealer Pricing Backend (Node.js)
+  dealer-pricing:
+    build:
+      context: ./backend_services/dealer_details
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080" # Host_Port:Container_Port (within PWD's host)
+    environment:
+      - PORT=8080
+    restart: always
+
+  # Frontend Application (Python/Flask)
+  frontend-app:
+    build:
+      context: ./frontend_app
+      dockerfile: Dockerfile
+    ports:
+      - "5001:5001" # Host_Port:Container_Port (within PWD's host)
+    depends_on:
+      - product-details
+      - dealer-pricing
+    restart: always
