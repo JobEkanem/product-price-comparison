@@ -6,8 +6,8 @@
 }
   </style>
   <script>
-    const PRODUCT_API_URL = "http://products_list:5000/";
-    const DEALER_API_URL = "http://dealer_details:8080/";
+   let produrl = "http://localhost:5000/"
+    let dealerurl = "http://localhost:8080/"
 
 
     axios.get(produrl+"products").then(res=>{
