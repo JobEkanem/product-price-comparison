@@ -6,8 +6,9 @@
 }
   </style>
   <script>
-   let produrl = "http://localhost:5000/"
-    let dealerurl = "http://localhost:8080/"
+   const productApi = "http://localhost:5000/";
+   const dealerApi = "http://localhost:8080/";
+
 
 
     axios.get(produrl+"products").then(res=>{
