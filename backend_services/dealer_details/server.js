@@ -1,52 +1,36 @@
 const express = require("express");
-var cors = require('cors')
+const cors = require("cors");
+
 const app = express();
 app.use(cors());
+app.use(express.json());
 
-const dealerslist = require("./utils/dealers.json");
+const dealerData = {
+  Laptop: [
+    { dealer: "Dealer A", price: 600 },
+    { dealer: "Dealer B", price: 620 },
+    { dealer: "Dealer C", price: 610 },
+  ],
+  Tablet: [
+    { dealer: "Dealer A", price: 300 },
+    { dealer: "Dealer B", price: 320 }
+  ],
+  Phone: [
+    { dealer: "Dealer C", price: 450 },
+    { dealer: "Dealer D", price: 460 }
+  ]
+};
 
-
-
-app.get("/price/:dealer/:product", function (request, response) {
-  let dealers = dealerslist.dealers;
-  let req_dealer = request.params.dealer;
-  let req_product = request.params.product;
-  let resp = false;
-  dealers.forEach((dealer) => {
-    if(dealer.Dealer === req_dealer) {
-      if(dealer.products[req_product]) {
-        response.send({"message":req_product+" costs "+ dealer.products[req_product]+ " at "+req_dealer});
-        resp = true;
-      } else {
-        response.send({"message":req_product+" is not available with "+ req_dealer});
-        resp = true;
-      }
-    }
-  });
-  if(!resp) {
-    response.send({"message":"The product is not available with this dealer"})
-  }
-
-})
-
-app.get("/allprice/:product", function (request, response) {
-  let dealers = dealerslist.dealers;
-  let req_product = request.params.product;
-  let priceslist = [];
-  dealers.forEach((dealer) => {
-    if(dealer.products[req_product]) {
-      priceslist.push({key:dealer.Dealer,value:dealer.products[req_product]});
-    }
-  });
-  if(priceslist.length > 0) {
-    response.send({"prices":priceslist})
+app.get("/dealers/:product", function (req, res) {
+  const productName = req.params.product;
+  const dealers = dealerData[productName];
+  if (dealers) {
+    res.json(dealers);
   } else {
-    response.send({"message":"The product is not available with this dealer"})
+    res.status(404).send("No dealers found for that product.");
   }
+});
 
-})
-
-let port = process.env.PORT || 8080
-app.listen(port, function () {
-  console.log("To view your app, open this link in your browser: http://localhost:" + port);
-})
+app.listen(8080, () => {
+  console.log("Dealer Pricing Service running on port 8080");
+});
